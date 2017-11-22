@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mongodbjava3;
+package connexionMongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -14,16 +14,19 @@ import com.mongodb.client.MongoDatabase;
  * @author formation
  */
 public class ConnexionMongoDB {
+    private MongoClient mongoClient;
+    
     /**
      * 
      * @param psIP
      * @param psPort
      * @return 
      */
-    public MongoClient seConnecter(String psIP, String psPort, String psUser, String psPwd) {
+    public MongoClient seConnecter(String psIP, String psPort, String psUser, String psPwd, String psDB) {
 
-        MongoClientURI uri = new MongoClientURI("mongodb://" + psUser + ":"+ psPwd + "@" +psIP + ":" + psPort);
+        MongoClientURI uri = new MongoClientURI("mongodb://" + psUser + ":"+ psPwd + "@" +psIP + ":" + psPort + "/" + psDB);
         MongoClient mongoClient = new MongoClient(uri);
+        //this.mongoClient = mongoClient;
         return mongoClient;
 
     } /// seConnecter
@@ -37,6 +40,7 @@ public class ConnexionMongoDB {
 
         MongoClientURI uri = new MongoClientURI("mongodb://" + psIP + ":" + psPort);
         MongoClient mongoClient = new MongoClient(uri);
+        //this.mongoClient = mongoClient;
         return mongoClient;
 
     } /// seConnecter
@@ -45,7 +49,9 @@ public class ConnexionMongoDB {
     public MongoDatabase getDB(String psIP, String psPort, String psUser, String psPwd, String psDB) {
         MongoDatabase db = null;
         try{
-            seConnecter(psIP, psPort, psUser, psPwd);
+            MongoClient mongoClient = seConnecter(psIP, psPort, psUser, psPwd, psDB);
+            db = mongoClient.getDatabase(psDB);
+            this.mongoClient = mongoClient;
         }catch(Exception e) {
             System.out.println("Erreur : " + e.getMessage());
         }
@@ -69,5 +75,24 @@ public class ConnexionMongoDB {
         }
 
         return lb0K;
-    } /// seDeconnecter    
+    } /// seDeconnecter   
+    
+    /**
+     * 
+     * @return 
+     */
+    public boolean seDeconnecter() {
+        boolean lb0K = true;
+
+        try {
+            if (mongoClient != null) {
+                mongoClient.close();
+            }
+        } catch (Exception e) {
+            lb0K = false;
+        }
+
+        return lb0K;
+    } /// seDeconnecter   
+    
 }

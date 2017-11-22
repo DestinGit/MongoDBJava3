@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mongodbjava3;
+package connexionMongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -26,6 +26,6 @@ public class ConnexionMongoDBTest {
         
         MongoDatabase db = cnx.getDB("185.31.40.41", "27017", "m2icdi", "mdp12345", "m2icdi_cine");
         System.out.println(db);
-        System.out.println("db.listCollectionNames()");
+        System.out.println(db.listCollectionNames());
     }      
 }
