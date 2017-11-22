@@ -1,39 +1,32 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package mongodbjava3;
+package alwaysMongo;
 
-import com.mongodb.*;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.bson.Document;
-/**
- *
- * @author formation
- */
-public class FilmsSelectAll {
+
+public class AlwaysDataSelectAll {
 
     public static void main(String[] args) {
 
-        String lsDBName = "cinescope";
-        String lsCollectionName = "films";
-
         try {
-            // Connexion a mongoDB
-            MongoClient mongoClient = new MongoClient("172.26.10.144", 27017);
+            // Connexion au serveur
+            MongoClientURI uri = new MongoClientURI("mongodb://m2icdi:mdp12345@185.31.40.41/m2icdi_cine");
+            MongoClient mongoClient = new MongoClient(uri);
 
-            // La BD
-            MongoDatabase db = mongoClient.getDatabase(lsDBName);
+            System.out.println(mongoClient);
+            MongoDatabase db = mongoClient.getDatabase("m2icdi_cine");
+            System.out.println(db);
 
             // La collection
+            String lsCollectionName = "films";
             MongoCollection collection = db.getCollection(lsCollectionName);
-
+            // Les documents
             /*
              Balayage du curseur
              */
@@ -41,7 +34,10 @@ public class FilmsSelectAll {
             MongoCursor<Document> curseur = find.iterator();
             while (curseur.hasNext()) {
                 Document document = curseur.next();
-//                System.out.println(document.toJson());
+                System.out.println("toJson");
+                System.out.println(document.toJson());
+                System.out.println("");
+                System.out.println("Via Set Entry");
                 Set<Entry<String, Object>> champs = document.entrySet();
                 for (Entry<String, Object> entry : champs) {
                     System.out.print(entry.getKey());
@@ -54,11 +50,11 @@ public class FilmsSelectAll {
             // Fermeture du curseur
             curseur.close();
 
+            // La deconnexion de la BD n'existe pas
             // Fermeture de la connexion au serveur
             mongoClient.close();
         } catch (Exception e) {
-            System.out.println("Exception : " + e.getMessage());
+            System.out.println("UnknownHostException : " + e.getMessage());
         }
     } /// main
-    
-}
+} /// class AlwaysDataSelectAll
